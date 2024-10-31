@@ -1,0 +1,6 @@
+@KomaruBotASPNET_HostAddress = http://localhost:5125
+
+GET {{KomaruBotASPNET_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

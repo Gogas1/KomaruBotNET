@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KomaruBotASPNET", "KomaruBotASPNET\KomaruBotASPNET.csproj", "{EC0BC76A-21F6-44E4-9F99-12AA78203875}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC0BC76A-21F6-44E4-9F99-12AA78203875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC0BC76A-21F6-44E4-9F99-12AA78203875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC0BC76A-21F6-44E4-9F99-12AA78203875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC0BC76A-21F6-44E4-9F99-12AA78203875}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48D0AD5A-32FA-45E3-8253-078190BC4D32}
+	EndGlobalSection
+EndGlobal
