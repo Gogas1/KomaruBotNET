@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /KomaruBotASPNET/appsettings.json
 /KomaruBotASPNET/appsettings.Development.json
+/*.TMP
+/KomaruBotASPNET/Actions/AddKomaru/NameAwait/GetKomaruNameAction.cs~RFadaa30.TMP
