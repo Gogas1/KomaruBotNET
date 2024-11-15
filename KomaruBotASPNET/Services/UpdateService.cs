@@ -1,6 +1,6 @@
 ﻿using KomaruBotASPNET.DbContexts;
 using KomaruBotASPNET.Enums;
-using KomaruBotASPNET.States;
+using KomaruBotASPNET.States.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
@@ -13,14 +13,20 @@ namespace KomaruBotASPNET.Services
     public class UpdateService : IUpdateHandler
     {
         private readonly UserService _userService;
-        private readonly StateHandlersFactory<Message> _stateHandlersFactory;
+        private readonly StateHandlersFactory<Message> _stateHandlersMessageFactory;
+        private readonly StateHandlersFactory<InlineQuery> _stateHandlersInlineQueryFactory;
         private readonly ILogger _logger;
 
-        public UpdateService(StateHandlersFactory<Message> stateHandlersFactory, ILogger<UpdateService> logger, UserService userService)
+        public UpdateService(
+            StateHandlersFactory<Message> stateHandlersFactory, 
+            ILogger<UpdateService> logger, 
+            UserService userService, 
+            StateHandlersFactory<InlineQuery> stateHandlersInlineQueryFactory)
         {
-            _stateHandlersFactory = stateHandlersFactory;
+            _stateHandlersMessageFactory = stateHandlersFactory;
             _logger = logger;
             _userService = userService;
+            _stateHandlersInlineQueryFactory = stateHandlersInlineQueryFactory;
         }
 
         public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, HandleErrorSource source, CancellationToken cancellationToken)
@@ -35,8 +41,28 @@ namespace KomaruBotASPNET.Services
             await (update switch
             {
                 { Message: { } message } => OnMessage(message),
+                { InlineQuery: { } inlineQuery } => OnInlineQuery(inlineQuery),
                 _ => UnknownUpdateHandlerAsync(update)
             });
+        }
+
+        private async Task OnInlineQuery(InlineQuery inlineQuery)
+        {
+            if (inlineQuery.From == null)
+            {
+                return;
+            }
+
+            UserState userState = await _userService.GetUserStateByTelegramIdAsync(inlineQuery.From.Id);
+
+            StateHandlerBase<InlineQuery>? targetStateHandler = _stateHandlersInlineQueryFactory.GetStateHandler(userState);
+
+            if (targetStateHandler == null)
+            {
+                return;
+            }
+
+            await targetStateHandler.Handle(inlineQuery);
         }
 
         private async Task OnMessage(Message msg)
@@ -48,7 +74,7 @@ namespace KomaruBotASPNET.Services
 
             UserState userState = await _userService.GetUserStateByTelegramIdAsync(msg.From.Id);
 
-            StateHandlerBase<Message>? targetStateHandler = _stateHandlersFactory.GetStateHandler(userState);
+            StateHandlerBase<Message>? targetStateHandler = _stateHandlersMessageFactory.GetStateHandler(userState);
             
             if(targetStateHandler == null)
             {

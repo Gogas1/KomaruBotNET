@@ -5,9 +5,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace KomaruBotASPNET.Actions.AddKomaru.FileAwait
+namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.FileAwait
 {
-    public class GetKomaruFileAction : ResultAction
+    public class GetKomaruFileAction : ResultAction<Message>
     {
         private readonly ITelegramBotClient _telegramBotClient;
         private readonly UserService _userService;
@@ -23,7 +23,7 @@ namespace KomaruBotASPNET.Actions.AddKomaru.FileAwait
 
         public override async Task<Message?> Execute(Message msg)
         {
-            if (msg.From == null || (msg.Photo == null && msg.Sticker == null && msg.Document == null))
+            if (msg.From == null || msg.Photo == null && msg.Sticker == null && msg.Document == null)
             {
                 return await SendRejectMessage(msg);
             }
@@ -50,7 +50,7 @@ namespace KomaruBotASPNET.Actions.AddKomaru.FileAwait
                 return msg.Sticker.FileId;
             }
 
-            if(msg.Document != null)
+            if (msg.Document != null)
             {
                 return msg.Document.FileId;
             }
@@ -68,7 +68,7 @@ namespace KomaruBotASPNET.Actions.AddKomaru.FileAwait
                     FileType = fileType
                 });
             });
-            await _userService.SetUserStateAsync(Enums.UserState.KomaruNameAwait, userId);
+            await _userService.SetUserStateAsync(UserState.KomaruNameAwait, userId);
         }
 
         private Task<Message> SendRejectMessage(Message msg) =>

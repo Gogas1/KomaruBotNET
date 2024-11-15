@@ -12,7 +12,7 @@ namespace KomaruBotASPNET.DbContexts
         public DbSet<MyUser> Users { get; set; }
         public DbSet<UserInputState> UserInputStates { get; set; }
         public DbSet<KomaruGif> KomaruGifs { get; set; }
-
+        public DbSet<Keyword> Keywords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,7 +25,7 @@ namespace KomaruBotASPNET.DbContexts
                 .OwnsOne(us => us.AddKomaruFlow, b =>
                 {
                     b.Property(x => x.Keywords);
-                });
+                });               
 
             base.OnModelCreating(modelBuilder);
         }

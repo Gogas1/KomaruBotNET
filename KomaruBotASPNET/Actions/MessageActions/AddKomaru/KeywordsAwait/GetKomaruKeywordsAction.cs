@@ -3,9 +3,9 @@ using KomaruBotASPNET.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait
+namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
 {
-    public class GetKomaruKeywordsAction : ResultAction
+    public class GetKomaruKeywordsAction : ResultAction<Message>
     {
         private readonly ITelegramBotClient telegramBotClient;
         private readonly UserService userService;
@@ -21,7 +21,7 @@ namespace KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait
 
         public override async Task<Message?> Execute(Message msg)
         {
-            if(!msg.ValidateMessage(true))
+            if (!msg.ValidateMessage(true))
             {
                 return await telegramBotClient.SendTextMessageAsync(msg.Chat.Id, FailureText);
             }

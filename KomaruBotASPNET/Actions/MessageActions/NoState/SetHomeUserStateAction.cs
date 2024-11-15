@@ -1,9 +1,9 @@
 ﻿using KomaruBotASPNET.Services;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.Actions.NoState
+namespace KomaruBotASPNET.Actions.MessageActions.NoState
 {
-    public class SetHomeUserStateAction : ResultAction
+    public class SetHomeUserStateAction : ResultAction<Message>
     {
         private readonly UserService _userService;
 
@@ -14,7 +14,7 @@ namespace KomaruBotASPNET.Actions.NoState
 
         public override async Task<Message?> Execute(Message msg)
         {
-            if(msg.From == null)
+            if (msg.From == null)
             {
                 return null;
             }

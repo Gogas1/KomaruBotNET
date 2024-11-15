@@ -2,7 +2,7 @@
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace KomaruBotASPNET.States
+namespace KomaruBotASPNET.States.Abstractions
 {
     public class StateHandlersFactory<TMessageType>
     {

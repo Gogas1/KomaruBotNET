@@ -1,15 +1,18 @@
 ﻿using KomaruBotASPNET.Actions;
-using KomaruBotASPNET.Actions.AddKomaru.FileAwait;
-using KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait;
-using KomaruBotASPNET.Actions.AddKomaru.NameAwait;
-using KomaruBotASPNET.Actions.Home;
-using KomaruBotASPNET.Actions.NoState;
-using KomaruBotASPNET.Actions.Shared;
+using KomaruBotASPNET.Actions.InlineQueryActions.AnyState;
+using KomaruBotASPNET.Actions.MessageActions.AddKomaru.FileAwait;
+using KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait;
+using KomaruBotASPNET.Actions.MessageActions.AddKomaru.NameAwait;
+using KomaruBotASPNET.Actions.MessageActions.Home;
+using KomaruBotASPNET.Actions.MessageActions.NoState;
+using KomaruBotASPNET.Actions.MessageActions.Shared;
 using KomaruBotASPNET.Configuration;
 using KomaruBotASPNET.DbContexts;
 using KomaruBotASPNET.Enums;
 using KomaruBotASPNET.Services;
-using KomaruBotASPNET.States;
+using KomaruBotASPNET.States.Abstractions;
+using KomaruBotASPNET.States.InlineQueryHandlers;
+using KomaruBotASPNET.States.MessageStates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Telegram.Bot.Types;
@@ -40,6 +43,8 @@ namespace KomaruBotASPNET.Extensions
             services.AddTransient<GetKomaruNameAction>();
             services.AddTransient<GetKomaruKeywordsAction>();
             services.AddTransient<KeywordsEndCAction>();
+
+            services.AddTransient<KomaruSearchAction>();
         }
 
         public static void AddStateHandlers(this IServiceCollection services)
@@ -48,7 +53,7 @@ namespace KomaruBotASPNET.Extensions
 
             services.AddTransient<NoStateStateHandler>(sp =>
             {
-                var actions = new List<ResultAction>
+                var actions = new List<ResultAction<Message>>
                 {
                     sp.GetRequiredService<SendHelloGifAction>(),
                     sp.GetRequiredService<SetHomeUserStateAction>(),
@@ -60,7 +65,7 @@ namespace KomaruBotASPNET.Extensions
 
             services.AddTransient<HomeStateStateHandler>(sp =>
             {
-                var actions = new List<ResultAction>
+                var actions = new List<ResultAction<Message>>
                 {
                     sp.GetRequiredService<CommandSwitchAction>(),
                 };
@@ -70,7 +75,7 @@ namespace KomaruBotASPNET.Extensions
 
             services.AddTransient<KomaruFileAwaitStateHandler>(sp =>
             {
-                var actions = new List<ResultAction>
+                var actions = new List<ResultAction<Message>>
                 {
                     sp.GetRequiredService<GetKomaruFileAction>(),
                 };
@@ -85,7 +90,7 @@ namespace KomaruBotASPNET.Extensions
 
             services.AddTransient<KomaruNameAwaitStateHandler>(sp =>
             {
-                var actions = new List<ResultAction>
+                var actions = new List<ResultAction<Message>>
                 {
                     sp.GetRequiredService<GetKomaruNameAction>(),
                 };
@@ -100,7 +105,7 @@ namespace KomaruBotASPNET.Extensions
 
             services.AddTransient<KomaruKeywordsAwaitStateHandler>(sp =>
             {
-                var actions = new List<ResultAction>
+                var actions = new List<ResultAction<Message>>
                 {
                     sp.GetRequiredService<GetKomaruKeywordsAction>(),
                 };
@@ -112,6 +117,16 @@ namespace KomaruBotASPNET.Extensions
                 };
 
                 return new KomaruKeywordsAwaitStateHandler(actions, beforeActions);
+            });
+
+            services.AddTransient<InlineQueryHomeStateStateHandler>(sp =>
+            {
+                List<ResultAction<InlineQuery>> actions = new List<ResultAction<InlineQuery>>
+                {
+                    sp.GetRequiredService<KomaruSearchAction>(),
+                };
+
+                return new InlineQueryHomeStateStateHandler(actions);
             });
         }
 
@@ -131,6 +146,18 @@ namespace KomaruBotASPNET.Extensions
                 };
 
                 return new StateHandlersFactory<Message>(messageHandlers);
+            });
+
+            services.AddTransient<StateHandlersFactory<InlineQuery>>(sp =>
+            {
+                var scopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
+
+                var inlineQueryHandlers = new Dictionary<UserState, Func<StateHandlerBase<InlineQuery>>>
+                {
+                    { UserState.Home, () => scopeFactory.CreateScope().ServiceProvider.GetRequiredService<InlineQueryHomeStateStateHandler>() },
+                };
+
+                return new StateHandlersFactory<InlineQuery>(inlineQueryHandlers);
             });
         }
         public static void AddSqlServerDbContext(this IServiceCollection services)

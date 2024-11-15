@@ -1,9 +1,9 @@
 ﻿using KomaruBotASPNET.Services;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.Actions.Home
+namespace KomaruBotASPNET.Actions.MessageActions.Home
 {
-    public class GetKomaruAction : ResultAction
+    public class GetKomaruAction : ResultAction<Message>
     {
         private readonly GifService _gifService;
 

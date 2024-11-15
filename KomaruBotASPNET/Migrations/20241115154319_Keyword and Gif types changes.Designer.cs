@@ -3,6 +3,7 @@ using KomaruBotASPNET.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KomaruBotASPNET.Migrations
 {
     [DbContext(typeof(KomaruDbContext))]
-    partial class KomaruDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115154319_Keyword and Gif types changes")]
+    partial class KeywordandGiftypeschanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

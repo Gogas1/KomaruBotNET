@@ -4,23 +4,21 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.Enums;
 
-namespace KomaruBotASPNET.Actions.Shared
+namespace KomaruBotASPNET.Actions.MessageActions.Shared
 {
-    public class SendHomeUsageMessageAction : ResultAction
+    public class SendHomeUsageMessageAction : ResultAction<Message>
     {
         private readonly ITelegramBotClient _botClient;
         private readonly AuthorizationService _authorizationService;
 
         private const string UsageText = """
-            <b>Меню бота:</b>
-            /hello - Отправить приветственную гиф;
-            /komaru - Случайная гифка с кумаром;
+            <b>Использование:</b>
+            Вызовите бота в любом чате через @MyKomaruBot и добавьте ваш запрос
             """;
 
         private const string ExtendedUsageText = """
             <b>Меню бота:</b>
-            /hello - Отправить приветственную гиф;
-            /komaru - Случайная гифка с кумаром;
+            Вызовите бота в любом чате через @MyKomaruBot и добавьте ваш запрос
 
             <b>Админское:</b>
             /addkomaru - Добавить гифку с кумаром
@@ -34,7 +32,7 @@ namespace KomaruBotASPNET.Actions.Shared
 
         public override async Task<Message?> Execute(Message msg)
         {
-            if(_authorizationService.IsAdminAccount(msg.From?.Id ?? 0))
+            if (_authorizationService.IsAdminAccount(msg.From?.Id ?? 0))
             {
                 return await _botClient.SendTextMessageAsync(msg.Chat, ExtendedUsageText, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
             }

@@ -4,9 +4,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace KomaruBotASPNET.Actions.Home
+namespace KomaruBotASPNET.Actions.MessageActions.Home
 {
-    public class InitiateKomaruGifAddingAction : ResultAction
+    public class InitiateKomaruGifAddingAction : ResultAction<Message>
     {
         private readonly AuthorizationService authorizationService;
         private readonly UserService userService;
@@ -30,12 +30,12 @@ namespace KomaruBotASPNET.Actions.Home
 
         public override async Task<Message?> Execute(Message msg)
         {
-            if(msg.From == null)
+            if (msg.From == null)
             {
                 return null;
             }
 
-            if(!authorizationService.IsAdminAccount(msg.From.Id))
+            if (!authorizationService.IsAdminAccount(msg.From.Id))
             {
                 return null;
             }

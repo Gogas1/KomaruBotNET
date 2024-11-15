@@ -4,9 +4,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace KomaruBotASPNET.Actions.AddKomaru.NameAwait
+namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.NameAwait
 {
-    public class GetKomaruNameAction : ResultAction
+    public class GetKomaruNameAction : ResultAction<Message>
     {
         private readonly UserService _userService;
         private readonly ITelegramBotClient _telegramBotClient;
@@ -24,7 +24,7 @@ namespace KomaruBotASPNET.Actions.AddKomaru.NameAwait
         {
             if (!msg.ValidateMessage(validateText: true))
             {
-               return await _telegramBotClient.SendTextMessageAsync(msg.Chat.Id, FailureMessage, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+                return await _telegramBotClient.SendTextMessageAsync(msg.Chat.Id, FailureMessage, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
             }
 
             await _userService.SetUserStateInputStateAsync(msg.From!.Id, us =>

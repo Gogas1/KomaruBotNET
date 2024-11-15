@@ -3,9 +3,9 @@ using KomaruBotASPNET.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.Actions.NoState
+namespace KomaruBotASPNET.Actions.MessageActions.NoState
 {
-    public class SendHelloGifAction : ResultAction
+    public class SendHelloGifAction : ResultAction<Message>
     {
         private readonly GifService _gifService;
         private readonly ITelegramBotClient _botClient;

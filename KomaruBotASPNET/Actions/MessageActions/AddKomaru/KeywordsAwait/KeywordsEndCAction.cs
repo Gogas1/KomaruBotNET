@@ -5,7 +5,7 @@ using KomaruBotASPNET.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait
+namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
 {
     public class KeywordsEndCAction : CancellationAction<Message>
     {
@@ -25,8 +25,8 @@ namespace KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait
 
         public override async Task Execute(Message update, CancellationTokenSource cancellationToken)
         {
-            if(!update.ValidateMessage(true, true))
-            {                
+            if (!update.ValidateMessage(true, true))
+            {
                 return;
             }
 
@@ -36,7 +36,7 @@ namespace KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait
             {
                 AddKomaruFlow? addKomaruFlow = await userService.GetUserStateObject(update.From!.Id, us => us.AddKomaruFlow);
 
-                if(addKomaruFlow == null)
+                if (addKomaruFlow == null)
                 {
                     await telegramBotClient.SendTextMessageAsync(update.Chat.Id, FailureMessage);
                     return;
@@ -46,13 +46,13 @@ namespace KomaruBotASPNET.Actions.AddKomaru.KeywordsAwait
                 {
                     TelegramId = addKomaruFlow.FileId,
                     Name = addKomaruFlow.Name,
-                    Keywords = new(string.Join(' ', addKomaruFlow.Keywords)),
+                    Keywords = addKomaruFlow.Keywords.Select(kw => new Keyword { Word = kw }).ToList(),
                     FileType = addKomaruFlow.FileType,
                 };
 
                 await gifService.CreateGif(komaruGif);
                 await userService.SetUserStateAsync(Enums.UserState.Home, update.From.Id);
-                await telegramBotClient.SendTextMessageAsync(update.Chat.Id, string.Format(SuccessMessage, komaruGif.Name, komaruGif.Keywords));
+                await telegramBotClient.SendTextMessageAsync(update.Chat.Id, string.Format(SuccessMessage, komaruGif.Name, string.Join(' ', komaruGif.Keywords.Select(kw => kw.Word))));
                 await SendKomaruFile(komaruGif, update.Chat);
                 cancellationToken.Cancel();
             }

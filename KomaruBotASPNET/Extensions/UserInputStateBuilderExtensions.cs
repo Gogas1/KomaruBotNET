@@ -16,7 +16,8 @@ namespace KomaruBotASPNET.Extensions
             {
                 FileId = addKomaruFlow.FileId,
                 Keywords = new List<string>(addKomaruFlow.Keywords),
-                Name = addKomaruFlow.Name
+                Name = addKomaruFlow.Name,
+                FileType = addKomaruFlow.FileType
             };
 
             return userInputState;

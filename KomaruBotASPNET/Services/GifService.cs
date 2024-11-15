@@ -1,6 +1,7 @@
 ﻿using KomaruBotASPNET.DbContexts;
 using KomaruBotASPNET.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Buffers;
 
 namespace KomaruBotASPNET.Services
 {
@@ -15,7 +16,7 @@ namespace KomaruBotASPNET.Services
 
         public async Task<KomaruGif?> GetGifByKeyword(string keyword)
         {
-            var targetGifs = await _context.KomaruGifs.Where(g => g.Name.Contains(keyword) || g.Keywords.Contains(keyword)).ToListAsync();
+            var targetGifs = await _context.KomaruGifs.Where(g => EF.Functions.Like(g.Name, $"%{keyword}%") || g.Keywords.Any(kw => EF.Functions.Like(kw.Word, $"%{keyword}%"))).ToListAsync();
 
             if(targetGifs.Any())
             {
@@ -49,5 +50,91 @@ namespace KomaruBotASPNET.Services
 
             return komaruGif;
         }
+
+        public async Task<KomaruGif?> GetGifByKeywords(params string[] keywords)
+        {
+            var result = await _context.KomaruGifs
+                .Include(g => g.Keywords)
+                .Select(g => new
+                {
+                    Gif = g,
+                    Score = keywords
+                        .Count(keyword => g.Keywords.Select(kw => kw.Word).Contains(keyword, StringComparer.OrdinalIgnoreCase))                   
+                })
+                .OrderByDescending(result => result.Score)
+                .FirstOrDefaultAsync();
+
+            return result?.Gif;
+        }
+
+        public async Task<List<KomaruGif>> FullTextSearchAsync(string text)
+        {
+            var searchKeywords = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            var query = _context.KomaruGifs
+                .Include(e => e.Keywords)
+                .AsNoTracking()
+                .Where(e => EF.Functions.Like(e.Name, $"%{text}%"));
+
+            foreach (var keyword in searchKeywords)
+            {
+                string lowerKeyword = keyword.ToLower();
+                query = query.Where(e =>
+                    EF.Functions.Like(e.Name.ToLower(), $"%{lowerKeyword}%") ||
+                    e.Keywords.Any(k => k.Word.ToLower().Contains(lowerKeyword)));
+            }
+
+            var initialResults = await query.ToListAsync();
+
+            var scoredResults = initialResults
+                .Select(entity => new
+                {
+                    Entity = entity,
+                    Score = CalculateCombinedScore(searchKeywords, entity)
+                })
+                .OrderByDescending(result => result.Score) // Assuming higher scores are better
+                .Select(result => result.Entity)
+                .ToList();
+
+            return scoredResults;
+        }
+
+        private static int CalculateCombinedScore(string[] searchKeywords, KomaruGif gif)
+        {
+            // Calculate score for both name and keywords list
+            int nameScore = CalculateBestMatchScore(searchKeywords, gif.Name);
+            int keywordsScore = gif.Keywords.Sum(keyword => CalculateBestMatchScore(searchKeywords, keyword.Word));
+
+            return nameScore + keywordsScore;
+        }
+
+        private static int CalculateBestMatchScore(string[] searchKeywords, string field)
+        {
+            // Calculate cumulative Levenshtein distance for each keyword against the field
+            return searchKeywords.Sum(keyword => CalculateLevenshteinDistance(keyword, field));
+        }
+
+        private static int CalculateLevenshteinDistance(string a, string b)
+        {
+            int[,] dp = new int[a.Length + 1, b.Length + 1];
+
+            for (int i = 0; i <= a.Length; i++) dp[i, 0] = i;
+            for (int j = 0; j <= b.Length; j++) dp[0, j] = j;
+
+            for (int i = 1; i <= a.Length; i++)
+            {
+                for (int j = 1; j <= b.Length; j++)
+                {
+                    int cost = a[i - 1] == b[j - 1] ? 0 : 1;
+                    dp[i, j] = Math.Min(
+                        Math.Min(dp[i - 1, j] + 1, dp[i, j - 1] + 1),
+                        dp[i - 1, j - 1] + cost
+                    );
+                }
+            }
+
+            return dp[a.Length, b.Length];
+        }
+
     }
 }

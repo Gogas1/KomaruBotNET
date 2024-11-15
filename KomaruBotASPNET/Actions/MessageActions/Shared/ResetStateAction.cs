@@ -1,7 +1,7 @@
 ﻿using KomaruBotASPNET.Services;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.Actions.Shared
+namespace KomaruBotASPNET.Actions.MessageActions.Shared
 {
     public class ResetStateAction : CancellationAction<Message>
     {
@@ -19,14 +19,14 @@ namespace KomaruBotASPNET.Actions.Shared
                 return;
             }
 
-            if(string.IsNullOrEmpty(update.Text))
+            if (string.IsNullOrEmpty(update.Text))
             {
                 return;
             }
 
             var parts = update.Text.Trim().Split(' ');
 
-            if(parts.Length < 1)
+            if (parts.Length < 1)
             {
                 return;
             }

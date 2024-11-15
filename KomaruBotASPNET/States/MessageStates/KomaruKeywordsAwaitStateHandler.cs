@@ -1,14 +1,15 @@
 ﻿using KomaruBotASPNET.Actions;
+using KomaruBotASPNET.States.Abstractions;
 using Telegram.Bot.Types;
 
-namespace KomaruBotASPNET.States
+namespace KomaruBotASPNET.States.MessageStates
 {
     public class KomaruKeywordsAwaitStateHandler : StateHandlerBase<Message>
     {
-        private readonly List<ResultAction> actions;
+        private readonly List<ResultAction<Message>> actions;
         private readonly List<CancellationAction<Message>> beforeActions;
 
-        public KomaruKeywordsAwaitStateHandler(List<ResultAction> actions, List<CancellationAction<Message>> beforeActions)
+        public KomaruKeywordsAwaitStateHandler(List<ResultAction<Message>> actions, List<CancellationAction<Message>> beforeActions)
         {
             this.actions = actions;
             this.beforeActions = beforeActions;
@@ -17,10 +18,10 @@ namespace KomaruBotASPNET.States
         public override async Task Handle(Message updateType)
         {
             CancellationTokenSource ctSource = new CancellationTokenSource();
-            
+
             foreach (var beforeAction in beforeActions)
             {
-                if(ctSource.IsCancellationRequested)
+                if (ctSource.IsCancellationRequested)
                 {
                     return;
                 }
