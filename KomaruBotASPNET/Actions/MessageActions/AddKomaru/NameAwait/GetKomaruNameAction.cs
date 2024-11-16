@@ -32,7 +32,8 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.NameAwait
                 us.SetAddKomaruFlow(new Models.StateFlows.AddKomaruFlow
                 {
                     FileId = us.AddKomaruFlow.FileId,
-                    Name = msg.Text!
+                    Name = msg.Text!,
+                    FileType = us.AddKomaruFlow.FileType,
                 });
             });
 

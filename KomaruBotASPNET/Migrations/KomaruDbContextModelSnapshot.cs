@@ -40,7 +40,7 @@ namespace KomaruBotASPNET.Migrations
 
                     b.HasIndex("GifId");
 
-                    b.ToTable("Keywords");
+                    b.ToTable("Keywords", (string)null);
                 });
 
             modelBuilder.Entity("KomaruBotASPNET.Models.KomaruGif", b =>
@@ -64,7 +64,7 @@ namespace KomaruBotASPNET.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KomaruGifs");
+                    b.ToTable("KomaruGifs", (string)null);
                 });
 
             modelBuilder.Entity("KomaruBotASPNET.Models.MyUser", b =>
@@ -83,7 +83,7 @@ namespace KomaruBotASPNET.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("KomaruBotASPNET.Models.UserInputState", b =>
@@ -102,7 +102,7 @@ namespace KomaruBotASPNET.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserInputStates");
+                    b.ToTable("UserInputStates", (string)null);
                 });
 
             modelBuilder.Entity("KomaruBotASPNET.Models.Keyword", b =>
@@ -124,7 +124,7 @@ namespace KomaruBotASPNET.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("KomaruBotASPNET.Models.StateFlows.AddKomaruFlow", "AddKomaruFlow", b1 =>
+                    b.OwnsOne("KomaruBotASPNET.Models.UserInputState.AddKomaruFlow#KomaruBotASPNET.Models.StateFlows.AddKomaruFlow", "AddKomaruFlow", b1 =>
                         {
                             b1.Property<int>("UserInputStateId")
                                 .HasColumnType("int");
@@ -146,7 +146,7 @@ namespace KomaruBotASPNET.Migrations
 
                             b1.HasKey("UserInputStateId");
 
-                            b1.ToTable("UserInputStates");
+                            b1.ToTable("UserInputStates", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserInputStateId");

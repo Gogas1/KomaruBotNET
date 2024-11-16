@@ -69,34 +69,32 @@ namespace KomaruBotASPNET.Services
 
         public async Task<List<KomaruGif>> FullTextSearchAsync(string text)
         {
+            text = text.Trim();
             var searchKeywords = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
+            if (!searchKeywords.Any())
+                return new List<KomaruGif>();
+
+            var containsQuery = string.Join(" OR ", searchKeywords.Select(k => $"\"{k}*\""));
+
             var query = _context.KomaruGifs
-                .Include(e => e.Keywords)
-                .AsNoTracking()
-                .Where(e => EF.Functions.Like(e.Name, $"%{text}%"));
+                .TagWith("FullTextSearch")
+                .Include(g => g.Keywords)
+                .Where(g => EF.Functions.Contains(g.Name, containsQuery) ||
+                           g.Keywords.Any(k => EF.Functions.Contains(k.Word, containsQuery)))
+                .AsNoTracking();
 
-            foreach (var keyword in searchKeywords)
-            {
-                string lowerKeyword = keyword.ToLower();
-                query = query.Where(e =>
-                    EF.Functions.Like(e.Name.ToLower(), $"%{lowerKeyword}%") ||
-                    e.Keywords.Any(k => k.Word.ToLower().Contains(lowerKeyword)));
-            }
+            var results = await query.ToListAsync();
 
-            var initialResults = await query.ToListAsync();
-
-            var scoredResults = initialResults
+            return results
                 .Select(entity => new
                 {
                     Entity = entity,
                     Score = CalculateCombinedScore(searchKeywords, entity)
                 })
-                .OrderByDescending(result => result.Score) // Assuming higher scores are better
-                .Select(result => result.Entity)
+                .OrderByDescending(x => x.Score)
+                .Select(x => x.Entity)
                 .ToList();
-
-            return scoredResults;
         }
 
         private static int CalculateCombinedScore(string[] searchKeywords, KomaruGif gif)

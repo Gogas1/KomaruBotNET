@@ -16,7 +16,7 @@ namespace KomaruBotASPNET.Services
 
         public bool IsAdminAccount(long telegramUserId)
         {
-            return telegramUserId == _botConfig.AdminId;
+            return _botConfig.AdminIds.Contains(telegramUserId);
         } 
     }
 }

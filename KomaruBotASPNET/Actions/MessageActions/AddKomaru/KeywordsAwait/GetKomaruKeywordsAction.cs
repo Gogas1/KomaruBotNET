@@ -37,7 +37,8 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
                 {
                     FileId = us.AddKomaruFlow.FileId,
                     Name = us.AddKomaruFlow.Name,
-                    Keywords = previousKeywords
+                    Keywords = previousKeywords,
+                    FileType = us.AddKomaruFlow.FileType,
                 });
             });
 
