@@ -25,8 +25,8 @@ namespace KomaruBotASPNET.Controllers
         public async Task<string> SetWebhook([FromServices]ITelegramBotClient botClient, CancellationToken ct)
         {
             var webhookUrl = _botConfiguration.WebhookUrl.AbsoluteUri;
-            await botClient.DeleteWebhookAsync();
-            await botClient.SetWebhookAsync(webhookUrl, allowedUpdates: [], secretToken: _botConfiguration.SecretKey, cancellationToken: ct);
+            await botClient.DeleteWebhook();
+            await botClient.SetWebhook(webhookUrl, allowedUpdates: [], secretToken: _botConfiguration.SecretKey, cancellationToken: ct);
             return $"Webhook set to {webhookUrl}";
         }
 

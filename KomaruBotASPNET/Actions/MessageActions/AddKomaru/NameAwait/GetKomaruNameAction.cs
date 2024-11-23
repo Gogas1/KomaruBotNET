@@ -24,7 +24,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.NameAwait
         {
             if (!msg.ValidateMessage(validateText: true))
             {
-                return await _telegramBotClient.SendTextMessageAsync(msg.Chat.Id, FailureMessage, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+                return await _telegramBotClient.SendMessage(msg.Chat.Id, FailureMessage, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
             }
 
             await _userService.SetUserStateInputStateAsync(msg.From!.Id, us =>
@@ -39,7 +39,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.NameAwait
 
             await _userService.SetUserStateAsync(Enums.UserState.KomaruKeywordsAwait, msg.From.Id);
 
-            return await _telegramBotClient.SendTextMessageAsync(msg.Chat.Id, SuccessMessage, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            return await _telegramBotClient.SendMessage(msg.Chat.Id, SuccessMessage, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
         }
     }
 }

@@ -23,7 +23,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
         {
             if (!msg.ValidateMessage(true))
             {
-                return await telegramBotClient.SendTextMessageAsync(msg.Chat.Id, FailureText);
+                return await telegramBotClient.SendMessage(msg.Chat.Id, FailureText);
             }
 
             var keywords = msg.Text!.Trim().Split(' ');
@@ -42,7 +42,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
                 });
             });
 
-            return await telegramBotClient.SendTextMessageAsync(msg.Chat.Id, SuccessText);
+            return await telegramBotClient.SendMessage(msg.Chat.Id, SuccessText);
         }
     }
 }

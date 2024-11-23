@@ -46,7 +46,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.Home
                 us.SetAddKomaruFlow(new Models.StateFlows.AddKomaruFlow());
             });
 
-            return await telegramBotClient.SendTextMessageAsync(msg.Chat, ActionText, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            return await telegramBotClient.SendMessage(msg.Chat, ActionText, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
         }
     }
 }

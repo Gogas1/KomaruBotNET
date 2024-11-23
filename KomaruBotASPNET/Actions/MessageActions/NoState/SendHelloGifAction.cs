@@ -22,12 +22,12 @@ namespace KomaruBotASPNET.Actions.MessageActions.NoState
 
             if (targetGif == null)
             {
-                return await _botClient.SendTextMessageAsync(msg.Chat, "У меня нет подходящей приветственной гифки(");
+                return await _botClient.SendMessage(msg.Chat, "У меня нет подходящей приветственной гифки(");
             }
 
             InputFile inputFile = InputFile.FromFileId(targetGif.TelegramId);
 
-            return await _botClient.SendPhotoAsync(msg.Chat, inputFile);
+            return await _botClient.SendPhoto(msg.Chat, inputFile);
         }
     }
 }

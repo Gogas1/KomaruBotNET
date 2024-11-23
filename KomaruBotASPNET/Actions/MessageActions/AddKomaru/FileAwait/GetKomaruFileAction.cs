@@ -72,10 +72,10 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.FileAwait
         }
 
         private Task<Message> SendRejectMessage(Message msg) =>
-            _telegramBotClient.SendTextMessageAsync(msg.Chat, RejectMessageText, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            _telegramBotClient.SendMessage(msg.Chat, RejectMessageText, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
 
         private Task<Message> SendSuccessMessage(Message msg) =>
-            _telegramBotClient.SendTextMessageAsync(msg.Chat, AcceptMessageText, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            _telegramBotClient.SendMessage(msg.Chat, AcceptMessageText, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
 
         private FileType GetFileType(Message message)
         {

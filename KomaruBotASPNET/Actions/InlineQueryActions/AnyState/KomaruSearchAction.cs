@@ -58,7 +58,7 @@ namespace KomaruBotASPNET.Actions.InlineQueryActions.AnyState
                 index++;
             }
 
-            await telegramBotClient.AnswerInlineQueryAsync(updateType.Id, results);
+            await telegramBotClient.AnswerInlineQuery(updateType.Id, results);
 
             return null;
         }

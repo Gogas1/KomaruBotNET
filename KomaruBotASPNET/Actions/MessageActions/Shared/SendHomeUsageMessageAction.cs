@@ -34,10 +34,10 @@ namespace KomaruBotASPNET.Actions.MessageActions.Shared
         {
             if (_authorizationService.IsAdminAccount(msg.From?.Id ?? 0))
             {
-                return await _botClient.SendTextMessageAsync(msg.Chat, ExtendedUsageText, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+                return await _botClient.SendMessage(msg.Chat, ExtendedUsageText, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
             }
 
-            return await _botClient.SendTextMessageAsync(msg.Chat, UsageText, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            return await _botClient.SendMessage(msg.Chat, UsageText, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
         }
 
     }

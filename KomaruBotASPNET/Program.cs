@@ -68,7 +68,7 @@ namespace KomaruBotASPNET
                             ArgumentNullException.ThrowIfNull(botConfiguration);
                             TelegramBotClientOptions options = new(botConfiguration.Token);
                             var bot = new TelegramBotClient(options, httpClient);
-                            Task.WaitAny(bot.DeleteWebhookAsync());
+                            Task.WaitAny(bot.DeleteWebhook());
                             return bot;
                         });
 

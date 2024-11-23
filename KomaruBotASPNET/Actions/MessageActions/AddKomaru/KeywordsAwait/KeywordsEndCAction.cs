@@ -38,7 +38,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
 
                 if (addKomaruFlow == null)
                 {
-                    await telegramBotClient.SendTextMessageAsync(update.Chat.Id, FailureMessage);
+                    await telegramBotClient.SendMessage(update.Chat.Id, FailureMessage);
                     return;
                 }
 
@@ -52,7 +52,7 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
 
                 await gifService.CreateGif(komaruGif);
                 await userService.SetUserStateAsync(Enums.UserState.Home, update.From.Id);
-                await telegramBotClient.SendTextMessageAsync(update.Chat.Id, string.Format(SuccessMessage, komaruGif.Name, string.Join(' ', komaruGif.Keywords.Select(kw => kw.Word))));
+                await telegramBotClient.SendMessage(update.Chat.Id, string.Format(SuccessMessage, komaruGif.Name, string.Join(' ', komaruGif.Keywords.Select(kw => kw.Word))));
                 await SendKomaruFile(komaruGif, update.Chat);
                 cancellationToken.Cancel();
             }
@@ -65,16 +65,16 @@ namespace KomaruBotASPNET.Actions.MessageActions.AddKomaru.KeywordsAwait
             switch (komaruGif.FileType)
             {
                 case Enums.FileType.Sticker:
-                    await telegramBotClient.SendStickerAsync(chat.Id, komaruGif.TelegramId);
+                    await telegramBotClient.SendSticker(chat.Id, komaruGif.TelegramId);
                     break;
                 case Enums.FileType.Photo:
-                    await telegramBotClient.SendPhotoAsync(chat.Id, komaruGif.TelegramId);
+                    await telegramBotClient.SendPhoto(chat.Id, komaruGif.TelegramId);
                     break;
                 case Enums.FileType.Animation:
-                    await telegramBotClient.SendAnimationAsync(chat.Id, komaruGif.TelegramId);
+                    await telegramBotClient.SendAnimation(chat.Id, komaruGif.TelegramId);
                     break;
                 default:
-                    await telegramBotClient.SendDocumentAsync(chat.Id, komaruGif.TelegramId);
+                    await telegramBotClient.SendDocument(chat.Id, komaruGif.TelegramId);
                     break;
             }
         }
