@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KomaruBotASPNET", "KomaruBotASPNET\KomaruBotASPNET.csproj", "{EC0BC76A-21F6-44E4-9F99-12AA78203875}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KomaruBotNet", "KomaruBotASPNET\KomaruBotNet.csproj", "{EC0BC76A-21F6-44E4-9F99-12AA78203875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -361,6 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/KomaruBotASPNET/appsettings.json
-/KomaruBotASPNET/appsettings.Development.json
+/KomaruBotNET/appsettings.json
+/KomaruBotNET/appsettings.Development.json
 *.TMP
