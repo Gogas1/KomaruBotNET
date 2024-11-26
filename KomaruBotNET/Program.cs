@@ -11,46 +11,7 @@ namespace KomaruBotASPNET
     {
         public static void Main(string[] args)
         {
-            //SetupAspnetWebhook(args);
             Task.WaitAll(SetupLongpolling(args));
-        }
-
-        public static void SetupAspnetWebhook(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.AddBotConfiguration();
-
-            builder.Services
-                .AddHttpClient("tgwebhook")
-                .RemoveAllLoggers()
-                .AddTypedClient<ITelegramBotClient>((httpClient, serviceProvider) =>
-                {
-                    var botConfig = serviceProvider.GetService<IOptions<BotConfiguration>>()?.Value;
-                    ArgumentNullException.ThrowIfNull(botConfig);
-
-                    return new TelegramBotClient(botConfig.Token, httpClient);
-                });
-
-            builder.AddSqlServerDbContext();
-
-            builder.Services.AddServices();
-            builder.Services.AddActions();
-            builder.Services.AddStateHandlers();
-
-            builder.Services.AddControllers();
-
-            var app = builder.Build();
-
-            app.UseHttpsRedirection();
-
-            //app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.MigrateDb();
-
-            app.Run();
         }
 
         public static async Task SetupLongpolling(string[] args)
