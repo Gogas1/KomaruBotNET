@@ -24,7 +24,6 @@ namespace KomaruBotASPNET.Abstractions
                 DropPendingUpdates = true
             };
 
-            var me = await _botClient.GetMe(stoppingToken);
             await _botClient.ReceiveAsync(updateHandler: _updateHandler, receiverOptions: receiverOptions, cancellationToken: stoppingToken);
         }
     }
